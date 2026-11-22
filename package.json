@@ -7,7 +7,9 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "test": "vitest run",
-    "new-service": "bash tools/new-service.sh"
+    "new-service": "bash tools/new-service.sh",
+    "db:migrate": "npm run migrate -w services/migrate",
+    "db:status": "npm run status -w services/migrate"
   },
   "devDependencies": {
     "@types/node": "^22.7.0",

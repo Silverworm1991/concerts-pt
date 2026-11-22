@@ -7,15 +7,25 @@ Portuguese ticketing sources into one searchable API.
 ```bash
 make setup      # install deps, create .env
 make test       # build + run tests
-make up         # postgres + rabbitmq + api via Docker
+make up         # postgres + rabbitmq + migrations + api via Docker
 curl localhost:3000/health
 curl localhost:3000/ready
 ```
 RabbitMQ UI: http://localhost:15672 (concerts / concerts)
 
+## Database
+```bash
+make db-status   # which migrations are applied
+make db-shell    # psql into the database
+make test-db     # run tests including the database ones (needs postgres up)
+make db-reset    # DESTROYS local data and rebuilds the schema
+```
+Schema and design decisions: [docs/data-model.md](docs/data-model.md)
+
 ## Layout
 - `packages/shared`  config validation, logging, HTTP service skeleton (health/readiness, request IDs, graceful shutdown)
 - `templates/service` template for new services
+- `services/migrate`  runs SQL migrations + seeds (one-shot job)
 - `services/*`        one folder per microservice
 - `tools/new-service.sh` scaffold a service: `npm run new-service -- scheduler`
 
