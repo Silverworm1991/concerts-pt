@@ -37,10 +37,23 @@ services:
       timeout: 5s
       retries: 10
 
+  # One-shot job: applies migrations + seeds, then exits. Services wait for it.
+  migrate:
+    <<: *service
+    build: { context: ., args: { SERVICE: migrate } }
+    command: ["node", "services/migrate/dist/index.js", "up", "seed"]
+    restart: "no"
+    depends_on:
+      postgres: { condition: service_healthy }
+
   api:
     <<: *service
     build: { context: ., args: { SERVICE: api } }
     ports: ["3000:3000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+      migrate:  { condition: service_completed_successfully }
 
 volumes:
   pgdata:
